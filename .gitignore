@@ -1,0 +1,17 @@
+# Compiled Python files
+*.pyc
+*.pyo
+*.pyd
+
+# Bytecode and cache directories
+__pycache__/
+instance/
+
+# Environment files
+.env
+
+# SQLite database
+app.db
+
+# Virtual environment
+venv/

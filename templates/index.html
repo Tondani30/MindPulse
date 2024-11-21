@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="styles.css">
+	<style> /* General reset and body styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f7fc;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.container {
+    text-align: center;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    width: 80%;
+    max-width: 800px;
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: #730b6a;
+    margin-bottom: 20px;
+}
+
+.hero-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+nav {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.nav-btn {
+    background-color: #730b6a ;
+    color: white;
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.nav-btn a {
+    text-decoration: none;
+    color: white;
+}
+
+.nav-btn:hover {
+    background-color: #45a049;
+}
+
+.nav-btn:active {
+    background-color: #388e3c;
+}
+</style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to your Mental Health Bullet Journal</h1>
+        
+        <img class="hero-image" src="mental-health.webp" alt="Mental health" width="600" height="315">
+        
+        <nav class="navigation">
+            <button class="nav-btn" onclick="window.location.href='mood.html';">Mood Tracker</button></button>
+            <button class="nav-btn" onclick="window.location.href='anxiety.html';">Anxiety Tracker</button></button>
+            <button class="nav-btn" onclick="window.location.href='gratitude.html';">Gratitude Diary</button></button>
+            <button class="nav-btn" onclick="window.location.href='statistics.html';">Statistics</button></button>
+        </nav>
+    </div>
+</body>
+</html>

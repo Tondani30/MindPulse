@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Anxiety Tracker</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f7f7f7;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        p {
+            text-align: center;
+            color: #666;
+        }
+
+        h2 {
+            color: #444;
+            text-align: center;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        /* Flex container for table and legend */
+        .tracker-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin: 20px auto;
+            gap: 20px;
+        }
+
+        /* Table styles */
+        .table-container {
+            display: grid;
+            grid-template-rows: auto repeat(12, auto);
+            grid-template-columns: auto repeat(31, auto);
+            gap: 8px;
+            text-align: center;
+            overflow-x: auto;
+        }
+
+        .header {
+            padding: 5px;
+            font-size: 12px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            width: 40px;
+            height: 30px;
+            box-sizing: border-box;
+        }
+		.block, .month-label {
+            padding: 5px;
+            font-size: 12px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            width: 40px;
+            height: 30px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            font-weight: bold;
+            background-color: #f0f0f0;
+        }
+
+        .month-label {
+            font-weight: bold;
+            background-color: #fafafa;
+        }
+
+        /* Dropdown styling */
+        select {
+            width: 100%;
+            font-size: 10px;
+            padding: 2px;
+            background-color: #f8f8f8;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        select:hover {
+            background-color: #e8e8e8;
+        }
+
+        /* Legend styling */
+        .legend {
+            font-size: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-left: auto; /* Pushes the legend to the far right */
+        }
+
+        .legend div {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .legend span {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Buttons */
+        .button-container {
+            margin: 20px auto;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .header, .block, .month-label {
+                font-size: 10px;
+                width: 25px;
+                height: 25px;
+            }
+
+            select {
+                font-size: 8px;
+            }
+
+            .legend {
+                font-size: 12px;
+                gap: 5px;
+            }
+        }
+
+    .image-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px; /* Space between images */
+        margin: 20px auto;
+        flex-wrap: wrap; /* Ensure responsiveness on smaller screens */
+    }
+
+    .image-container div {
+        text-align: center;
+    }
+
+    .image-container img {
+        max-width: 300px;
+        height: auto;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease;
+    }
+
+    .image-container img:hover {
+        transform: scale(1.05); /* Slight zoom on hover for better engagement */
+    }
+
+    .image-container p {
+        margin-top: 5px;
+        font-size: 14px;
+        color: #555;
+    }
+
+
+    </style>
+</head>
+<body>
+    <h1>Anxiety Tracker</h1>
+    <h2><b>Anxiety</b>, or being anxious, is a natural response to stress. It can affect people psychologically and physiologically, sometimes triggered by unknown future threats.</h2>
+
+    <div class="image-container">
+    <div><p>Anxiety can make you feel...</p>
+        <img src="da4dbf_306742926543412ea47661c422b4189b~mv2.png" alt="how it feels">
+
+    </div>
+    <div>
+        <img src="mqdefault_6s.webp" alt="how it feels">
+        <p><a href="https://www.youtube.com/watch?v=ZtBlAXo8LsY" target="_blank">Watch on YouTube</a></p>
+    </div>
+</div>
+
+
+
+    <p>Track your daily anxiety!</p>
+
+    <!-- Tracker Container -->
+    <div class="tracker-container">
+        <!-- Anxiety Tracker Table -->
+        <div class="table-container" id="mood-tracker"></div>
+
+        <!-- Anxiety Legend -->
+        <div class="legend">
+            <div><span style="background-color: red;"></span> High</div>
+            <div><span style="background-color: orange;"></span> Medium</div>
+            <div><span style="background-color: yellow;"></span> Low</div>
+            <div><span style="background-color: violet;"></span> Not Sure</div>
+        </div>
+    </div>
+
+    <!-- Save Button -->
+    <button onclick="saveMoods()">Save Anxiety Level</button>
+
+    <!-- Navigation Buttons -->
+    <div class="button-container">
+        <button class="previous-button" onclick="window.location.href='mood.html';">Mood</button>
+        <button class="home-button" onclick="window.location.href='index.html';">Home</button>
+        <button class="next-button" onclick="window.location.href='gratitude.html';">Gratitude</button>
+		<button class="log-out" onclick="window.location.href='logout.html';">Log Out</button>
+
+    </div>
+
+    <script>
+        const months = [
+            { name: 'Jan', days: 31 },
+            { name: 'Feb', days: 28 },
+            { name: 'Mar', days: 31 },
+            { name: 'Apr', days: 30 },
+            { name: 'May', days: 31 },
+            { name: 'Jun', days: 30 },
+            { name: 'Jul', days: 31 },
+            { name: 'Aug', days: 31 },
+            { name: 'Sep', days: 30 },
+            { name: 'Oct', days: 31 },
+            { name: 'Nov', days: 30 },
+            { name: 'Dec', days: 31 },
+        ];
+
+        function isLeapYear(year) {
+            return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+        }
+
+        function updateFebruaryDays() {
+            const currentYear = new Date().getFullYear();
+            months[1].days = isLeapYear(currentYear) ? 29 : 28;
+        }
+
+        function generateMoodTable() {
+            const moodTracker = document.getElementById('mood-tracker');
+            moodTracker.innerHTML = '';
+
+            const headerRow = document.createElement('div');
+            headerRow.classList.add('table-row');
+
+            const emptyCell = document.createElement('div');
+            emptyCell.classList.add('header');
+            headerRow.appendChild(emptyCell);
+
+            for (let day = 1; day <= 31; day++) {
+                const header = document.createElement('div');
+                header.classList.add('header');
+                header.textContent = day;
+                headerRow.appendChild(header);
+            }
+            moodTracker.appendChild(headerRow);
+
+            months.forEach((month, index) => {
+                const row = document.createElement('div');
+                row.classList.add('table-row');
+
+                const monthLabel = document.createElement('div');
+                monthLabel.classList.add('month-label');
+                monthLabel.textContent = month.name;
+                row.appendChild(monthLabel);
+
+                for (let day = 1; day <= 31; day++) {
+                    const dayBlock = document.createElement('div');
+                    dayBlock.classList.add('block');
+
+                    if (day <= month.days) {
+                        dayBlock.innerHTML = `
+                            <select aria-label="Select anxiety level for ${month.name} ${day}">
+                                <option value="">Select</option>
+                                <option value="red">High</option>
+                                <option value="orange">Medium</option>
+                                <option value="yellow">Low</option>
+                                <option value="violet">Not Sure</option>
+                            </select>
+                        `;
+                    }
+                    row.appendChild(dayBlock);
+                }
+
+                moodTracker.appendChild(row);
+            });
+        }
+
+        function saveMoods() {
+            alert('Anxiety levels saved successfully! (Feature under development)');
+        }
+
+        updateFebruaryDays();
+        generateMoodTable();
+    </script>
+</body>
+</html>

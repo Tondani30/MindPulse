@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood Tracker</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* General Styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f7f7f7;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        p {
+            text-align: center;
+            color: #666;
+        }
+
+        /* Flex container for table and legend */
+        .tracker-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin: 20px auto;
+            gap: 20px;
+        }
+
+        /* Table styles */
+        .table-container {
+            display: grid;
+            grid-template-rows: auto repeat(12, auto);
+            grid-template-columns: auto repeat(31, auto);
+            gap: 5px;
+            text-align: center;
+            overflow-x: auto;
+        }
+
+        .header, .block, .month-label {
+            padding: 5px;
+            font-size: 12px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            width: 33px;
+            height: 30px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            font-weight: bold;
+            background-color: #f0f0f0;
+        }
+
+        .month-label {
+            font-weight: bold;
+            background-color: #fafafa;
+        }
+
+        /* Dropdown styling */
+        select {
+            width: 100%;
+            font-size: 10px;
+            padding: 2px;
+            background-color: #f8f8f8;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+
+        select:hover {
+            background-color: #e8e8e8;
+        }
+
+        /* Legend styling */
+        .legend {
+            font-size: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-left: auto; /* Pushes the legend to the far right */
+        }
+
+        .legend div {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .legend span {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+        }
+
+
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .header, .block, .month-label {
+                font-size: 10px;
+                width: 25px;
+                height: 25px;
+            }
+
+            select {
+                font-size: 8px;
+            }
+
+            .legend {
+                font-size: 12px;
+                gap: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Mood Tracker</h1>
+    <p>Track your daily mood!</p>
+
+    <!-- Tracker Container -->
+    <div class="tracker-container">
+        <!-- Mood Tracker Table -->
+        <div class="table-container" id="mood-tracker"></div>
+
+        <!-- Mood Legend -->
+        <div class="legend">
+            <div><span style="background-color: red;"></span> Angry</div>
+            <div><span style="background-color: blue;"></span> Sad</div>
+            <div><span style="background-color: yellow;"></span> Happy</div>
+            <div><span style="background-color: orange;"></span> Anxious</div>
+            <div><span style="background-color: purple;"></span> Calm</div>
+            <div><span style="background-color: green;"></span> Excited</div>
+        </div>
+    </div>
+
+    <!-- Save Mood Button -->
+    <button onclick="saveMoods()">Save Mood</button>
+
+   <!-- Navigation Buttons -->
+    <div class="button-container">
+
+        <button class="home-button" onclick="window.location.href='index.html';">Home</button>
+        <button class="next-button" onclick="window.location.href='anxiety.html';">Anxiety</button>
+		<button class="log-out" onclick="window.location.href='login.html';">Log Out</button>
+
+    </div>
+
+    <script>
+        const months = [
+            { name: 'Jan', days: 31 },
+            { name: 'Feb', days: 28 },
+            { name: 'Mar', days: 31 },
+            { name: 'Apr', days: 30 },
+            { name: 'May', days: 31 },
+            { name: 'Jun', days: 30 },
+            { name: 'Jul', days: 31 },
+            { name: 'Aug', days: 31 },
+            { name: 'Sep', days: 30 },
+            { name: 'Oct', days: 31 },
+            { name: 'Nov', days: 30 },
+            { name: 'Dec', days: 31 },
+        ];
+
+        function isLeapYear(year) {
+            return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+        }
+
+        function updateFebruaryDays() {
+            const currentYear = new Date().getFullYear();
+            months[1].days = isLeapYear(currentYear) ? 29 : 28;
+        }
+
+        function generateMoodTable() {
+            const moodTracker = document.getElementById('mood-tracker');
+            moodTracker.innerHTML = '';
+
+            const headerRow = document.createElement('div');
+            headerRow.classList.add('table-row');
+
+            const emptyCell = document.createElement('div');
+            emptyCell.classList.add('header');
+            headerRow.appendChild(emptyCell);
+
+            for (let day = 1; day <= 31; day++) {
+                const header = document.createElement('div');
+                header.classList.add('header');
+                header.textContent = day;
+                headerRow.appendChild(header);
+            }
+            moodTracker.appendChild(headerRow);
+
+            months.forEach((month, index) => {
+                const row = document.createElement('div');
+                row.classList.add('table-row');
+
+                const monthLabel = document.createElement('div');
+                monthLabel.classList.add('month-label');
+                monthLabel.textContent = month.name;
+                row.appendChild(monthLabel);
+
+                for (let day = 1; day <= 31; day++) {
+                    const dayBlock = document.createElement('div');
+                    dayBlock.classList.add('block');
+
+                    if (day <= month.days) {
+                        dayBlock.innerHTML = `
+                            <select aria-label="Select mood for ${month.name} ${day}">
+                                <option value="">Select</option>
+                                <option value="red">Angry</option>
+                                <option value="blue">Sad</option>
+                                <option value="yellow">Happy</option>
+                                <option value="orange">Anxious</option>
+                                <option value="purple">Calm</option>
+                                <option value="green">Excited</option>
+                            </select>
+                        `;
+                    }
+                    row.appendChild(dayBlock);
+                }
+
+                moodTracker.appendChild(row);
+            });
+        }
+
+        function saveMoods() {
+            alert('Moods saved successfully! (Feature under development)');
+        }
+
+        updateFebruaryDays();
+        generateMoodTable();
+    </script>
+</body>
+</html>

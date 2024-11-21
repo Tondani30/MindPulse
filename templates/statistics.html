@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+   <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Styling for the Statistics page */
+        body {
+
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 40px;
+        }
+		p {
+		color: #730b6a;}
+
+        .chart-container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        canvas {
+            width: 100% !important;
+            height: 400px !important;
+            margin-bottom: 20px;
+        }
+
+        .chart-description {
+            text-align: center;
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        /* Buttons for navigation */
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+			border-radius: 15px;
+        }
+
+        .btn {
+            background-color: #730b6a;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin: 10px;
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+        }
+
+        .btn:active {
+            background-color: #388e3c;
+        }
+
+        /* Responsiveness for smaller screens */
+        @media (max-width: 768px) {
+            .chart-container {
+                width: 90%;
+            }
+
+            canvas {
+                height: 250px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Statistics</h1>
+
+    <div class="chart-container">
+        <div class="chart-description">
+            <p>Mood Tracker for the Past Month</p>
+        </div>
+        <canvas id="moodChart" width="400" height="200"></canvas>
+    </div>
+
+    <div class="chart-container">
+        <div class="chart-description">
+            <p>Anxiety Tracker for the Past Month</p>
+        </div>
+        <canvas id="anxietyChart" width="400" height="200"></canvas>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div class="button-container">
+
+        <button class="home-button" onclick="window.location.href='index.html';">Home</button>
+		<button class="log-out" onclick="window.location.href='logout.html';">Log Out</button>
+
+    </div>
+
+    <script>
+        // Flask data passed to JavaScript via Jinja
+        var moodData = {{ mood_data | tojson }};
+        var anxietyData = {{ anxiety_data | tojson }};
+
+        // Labels for the x-axis
+        var labels = [];
+        for (var i = 1; i <= Math.max(moodData.length, anxietyData.length); i++) {
+            labels.push('Day ' + i);
+        }
+
+        // Mood Chart
+        var moodChart = new Chart(document.getElementById('moodChart'), {
+            type: 'line',
+            data: {
+                labels: labels,  // Labels for days (x-axis)
+                datasets: [{
+                    label: 'Mood Level',
+                    data: moodData,  // Data points for mood
+                    borderColor: 'rgba(75, 192, 192, 1)',  // Line color
+                    fill: false,  // No fill under the line
+                    borderWidth: 2,
+                    tension: 0.4,  // Line smoothness
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                }]
+            },
+            options: {
+                responsive: true,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Days'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Mood Level'
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 10
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return 'Mood: ' + tooltipItem.raw;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Anxiety Chart
+        var anxietyChart = new Chart(document.getElementById('anxietyChart'), {
+            type: 'line',
+            data: {
+                labels: labels,  // Labels for days (x-axis)
+                datasets: [{
+                    label: 'Anxiety Level',
+                    data: anxietyData,  // Data points for anxiety
+                    borderColor: 'rgba(255, 99, 132, 1)',  // Line color
+                    fill: false,  // No fill under the line
+                    borderWidth: 2,
+                    tension: 0.4,  // Line smoothness
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                }]
+            },
+            options: {
+                responsive: true,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Days'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Anxiety Level'
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 10
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return 'Anxiety: ' + tooltipItem.raw;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

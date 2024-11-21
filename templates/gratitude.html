@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gratitude Diary</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* General reset and body styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fae1f3;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 650px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #730b6a;
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #555;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+            resize: vertical;
+            outline: none;
+            transition: border 0.3s ease;
+        }
+
+        textarea:focus {
+            border-color: #4CAF50;
+        }
+
+        button.submit-btn {
+            background-color: #730b6a;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button.submit-btn:hover {
+            background-color: #730b6a;
+        }
+
+        button.submit-btn:active {
+            background-color: #388e3c;
+        }
+
+        /* New Clear button styles */
+        button.clear-btn {
+            background-color: #f44336;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button.clear-btn:hover {
+            background-color: #e57373;
+        }
+
+        button.clear-btn:active {
+            background-color: #e53935;
+        }
+
+        .entry {
+            background-color: #ffffff;
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: left;
+        }
+
+        .entry p {
+            margin: 5px 0;
+            color: #444;
+        }
+
+        .entry strong {
+            color: #730b6a;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .container {
+                width: 90%;
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            textarea {
+                font-size: 0.9rem;
+            }
+
+            button.submit-btn, button.clear-btn {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Gratitude Diary</h1>
+
+        <form id="gratitude-form">
+            <label for="gratitude">Today I am grateful for:</label>
+            <textarea name="gratitude" id="gratitude" rows="6" placeholder="Write something you're grateful for..." required></textarea>
+            <button type="submit" class="submit-btn">Save Entry</button>
+            <button type="button" class="clear-btn" id="clear-btn">Clear Entry</button>
+        </form>
+
+        <div id="entries"></div>
+    </div>
+<!-- Navigation Buttons -->
+    <div class="button-container">
+        <button class="previous-button" onclick="window.location.href='anxiety.html';">Anxiety</button>
+        <button class="home-button" onclick="window.location.href='index.html';">Home</button>
+		<button class="log-out" onclick="window.location.href='logout.html';">Log Out</button>
+
+    </div>
+    <script>
+        // Fetch saved gratitude entries from localStorage
+        function loadEntries() {
+            const savedEntries = JSON.parse(localStorage.getItem('gratitudeEntries')) || [];
+            const entriesDiv = document.getElementById('entries');
+            entriesDiv.innerHTML = ''; // Clear current entries
+
+            savedEntries.forEach(entry => {
+                const entryDiv = document.createElement('div');
+                entryDiv.classList.add('entry');
+                entryDiv.innerHTML = `
+                    <p><strong>Entry on ${entry.date}:</strong></p>
+                    <p>${entry.text}</p>
+                `;
+                entriesDiv.prepend(entryDiv);
+            });
+        }
+
+        // Handle form submission
+        document.getElementById('gratitude-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const gratitudeText = document.getElementById('gratitude').value;
+            const currentDate = new Date();
+            const formattedDate = currentDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+            if (gratitudeText.trim()) {
+                const entry = {
+                    text: gratitudeText,
+                    date: formattedDate
+                };
+
+                // Display the entry immediately under the form
+                const entriesDiv = document.getElementById('entries');
+                const entryDiv = document.createElement('div');
+                entryDiv.classList.add('entry');
+                entryDiv.innerHTML = `
+                    <p><strong>Entry on ${entry.date}:</strong></p>
+                    <p>${entry.text}</p>
+                `;
+                entriesDiv.prepend(entryDiv);
+
+                // Save entry to localStorage
+                const savedEntries = JSON.parse(localStorage.getItem('gratitudeEntries')) || [];
+                savedEntries.unshift(entry);
+                localStorage.setItem('gratitudeEntries', JSON.stringify(savedEntries));
+
+                // Clear the form input after saving
+                document.getElementById('gratitude').value = '';
+            }
+        });
+
+        // Clear form
+        document.getElementById('clear-btn').addEventListener('click', function() {
+            document.getElementById('gratitude').value = '';
+        });
+
+        // Load entries on page load
+        window.onload = loadEntries;
+    </script>
+</body>
+</html>

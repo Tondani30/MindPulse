@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="styles.css">
+    <title>Log Out</title>
+    <style>
+        /* General Styling */
+
+        h1 {
+            color: #333;
+            margin-top: 50px;
+        }
+
+        p {
+            color: #666;
+            font-size: 18px;
+        }
+
+
+
+        .confirmation-message {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Are you sure you want to log out?</h1>
+    <p class="confirmation-message">You will be logged out of your account.</p>
+
+    <div class="button-container">
+        <!-- Logout and Cancel Buttons -->
+        <button onclick="logOut()">Log Out</button>
+        <button class="cancel-button" onclick="cancelLogout()">Cancel</button>
+    </div>
+
+    <script>
+        // Function to handle the logout action
+        function logOut() {
+            // Here, you could clear session data, cookies, or other authentication tokens
+            // Example: localStorage.clear(); or sessionStorage.clear();
+
+            alert('You have been logged out.');
+            window.location.href = 'login.html'; // Redirect to home or login page after logout
+        }
+
+        // Function to handle the cancellation of the logout action
+        function cancelLogout() {
+            window.location.href = 'index.html'; // Redirect back to home or previous page
+        }
+    </script>
+</body>
+</html>
